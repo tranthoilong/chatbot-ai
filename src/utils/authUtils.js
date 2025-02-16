@@ -11,10 +11,10 @@ async function getUserByApiKey(apiKey) {
         if (!apiKeyRecord) {
             return null; 
         }
-
+    
         return apiKeyRecord.user; 
     } catch (error) {
-        console.error("❌ Lỗi lấy thông tin user từ API Key:", error);
+        // console.error("❌ Lỗi lấy thông tin user từ API Key:", error);
         return null;
     }
 }

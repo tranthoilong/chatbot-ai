@@ -6,6 +6,7 @@ const path = require("path");
 const User = require("./src/models/User");
 const initDB = require("./src/core/initDB");
 const authRoutes = require("./src/routes/authRoutes");
+const { getUserByApiKey } = require("./src/utils/authUtils");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -61,7 +62,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
-app.post("/chat", async (req, res) => {
+app.post("/chat-meta", async (req, res) => {
     const { message, api_key } = req.body;
 
     if (!api_key) {
@@ -99,6 +100,26 @@ app.post("/chat", async (req, res) => {
         console.error(error);
         res.status(500).json({ error: "Error connecting to Gemini AI" });
     }
+});
+
+app.post("/chat", async (req, res) => {
+    const {message,api_key} = req.body;
+    try {
+        console.log(api_key);
+    if(!api_key){
+        return res.status(403).json({error: "Invalid API Key"});
+    }
+    let user = await getUserByApiKey(api_key);
+    if(!user) {
+        res.status(403).json({error: "Invalid API Key"});
+    }
+    console.log(user.dataValues);
+    res.json({ response:message });
+    }catch(err) {
+        console.error(error);
+        res.status(500).json({ error: "Error connecting to Gemini AI" });
+    }
+
 });
 
 
