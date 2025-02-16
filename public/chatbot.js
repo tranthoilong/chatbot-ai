@@ -1,4 +1,20 @@
 (function () {
+
+    let chatbot_container_element = document.getElementById("chatbot-container");
+
+    if (!chatbot_container_element){
+        console.error("Chatbot container element not found");
+        return;
+    }
+
+    let BASE_URL = chatbot_container_element.getAttribute('data-chat-bot-url');
+
+    if(!BASE_URL){
+        console.error("Chatbot container element must have data-chat-bot-url attribute");
+        return;
+    }
+    console.log(BASE_URL)
+
     if (document.getElementById("chatbot-widget")) return;
 
     function getApiKey() {
@@ -18,7 +34,7 @@
         console.log("🔑 API Key:", API_KEY);
     }
 
-    if (!API_KEY|| API_KEY!="123" ) {
+    if (!API_KEY) {
         return; 
     }
 
@@ -172,10 +188,10 @@
         document.getElementById("userInput").value = "";
 
         try {
-            let response = await fetch("http://localhost:5001/chat", {
+            let response = await fetch(`${BASE_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message, api_key: "user1_key" })
+                body: JSON.stringify({ message, api_key:API_KEY })
             });
 
             let data = await response.json();
