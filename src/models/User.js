@@ -23,6 +23,11 @@ const User = sequelize.define("User", {
         type: Sequelize.DataTypes.STRING,
         allowNull: false
     },
+    status:{
+        type: Sequelize.DataTypes.INTEGER,
+        defaultValue: 1
+    }
+    ,
     type_account: {
         type: Sequelize.DataTypes.ENUM("free trial", "premium", "pro"),
         defaultValue: "free trial"

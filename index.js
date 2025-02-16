@@ -3,17 +3,13 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
-const jwt = require("jsonwebtoken");
 const User = require("./src/models/User");
 const initDB = require("./src/core/initDB");
-
-
+const authRoutes = require("./src/routes/authRoutes");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
-const HOST = process.env.HOST || "localhost";
 const API_KEY = process.env.GEMINI_API_KEY;
-const JWT_SECRET = process.env.JWT_SECRET || "123@Long";
 
 app.use(cors());
 app.use(express.json());
@@ -22,10 +18,11 @@ app.use(express.static(path.join(__dirname, "public")));
 
 
 const TYPE_CHAT = Object.freeze({
-    BASIC: "basic",
+    PRO: "pro",
     PREMIUM: "premium",
-    TRIAL: "trial"
+    FREE_TRIAL: "free trial"
 });
+
 
 let data_test = [
     {
@@ -59,16 +56,11 @@ function getDataInListById(id) {
     return user;
 }
 
-app.get("/users", async (req, res) => {
-    try {
-        const users = await User.findAll();
-        res.json(users);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Server Error" });
-    }
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+app.use("/api/auth", authRoutes);
 app.post("/chat", async (req, res) => {
     const { message, api_key } = req.body;
 
@@ -109,44 +101,7 @@ app.post("/chat", async (req, res) => {
     }
 });
 
-app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "public", "index.html"));
-});
 
-app.get("/api/create-token", (req, res) => {
-    const token = createJWT({ username: "LongDevLor",type_chat:[
-        "basic"
-    ] });
-    const decoded = verifyJWT(token);
-console.log("Decoded Token:", decoded);
-    res.json({ token });
-});
-
-/**
- * Generates a JWT token with an expiration time.
- * 
- * @param {Object} payload - The data to be stored in the token.
- * @param {string | number} expiresIn - Expiration time (e.g., "1h", "30m", "7d").
- * @returns {string} JWT Token
- */
-function createJWT(payload, expiresIn = "1h") {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn });
-}
-
-/**
- * Verifies and decodes a JWT token.
- * 
- * @param {string} token - The JWT token to verify.
- * @returns {Object | null} Decoded token data if valid, otherwise null.
- */
-function verifyJWT(token) {
-    try {
-        return jwt.verify(token, JWT_SECRET);
-    } catch (error) {
-        console.error("Invalid or expired token:", error.message);
-        return null;
-    }
-}
 
 initDB().then(() => {
     app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

@@ -1,0 +1,5 @@
+curl -X GET "http://localhost:5001/api/auth/me"
+
+
+curl -X GET "http://localhost:5001/api/auth/me" \
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNzM5NzAyMDg1LCJleHAiOjE3Mzk3MDU2ODV9.9XjfQaNt9UQhR-1srrjpueHm6A2eBBVHPtE3MY460TE"

@@ -1,0 +1,2 @@
+curl -X GET "http://localhost:5001/api/auth/user-by-api-key" \
+-H "x-api-key: b8e71e84-776c-4b0f-a4ac-8b1915daf754"

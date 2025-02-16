@@ -23,10 +23,15 @@ const UserAPIKey = sequelize.define("UserAPIKey", {
         unique: true,
         defaultValue: () => uuidv4()
     },
+    count_call_api: {
+        type:Sequelize.DataTypes.INTEGER,
+        defaultValue: 0
+    }
+    ,
     is_active: {
         type: Sequelize.DataTypes.BOOLEAN,
         defaultValue: true
-    }
+    },
 }, {
     timestamps: true,
     underscored: true, 
