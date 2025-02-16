@@ -7,6 +7,27 @@
         return;
     }
 
+    let chatBotName = chatbot_container_element.getAttribute('data-chat-bot-name')??'Chatbot AI';
+    let floatingPositionBottom = chatbot_container_element.getAttribute('data-chat-floating-bottom')??'20px';
+    let floatingPositionRight = chatbot_container_element.getAttribute('data-chat-floating-right')??'20px';
+    let botChatAvatar = chatbot_container_element.getAttribute('data-chat-avatar');
+
+    function calculateFloatingPositionBottom(floatingPositionBottom) {
+        let match = floatingPositionBottom.match(/([0-9.-]+)([a-zA-Z%]*)/);
+    
+        if (!match) {
+            return '90px'; 
+        }
+    
+        let baseValue = parseFloat(match[1]) || 20; 
+        let unit = match[2] || 'px';
+    
+        let newValue = baseValue + 70;
+    
+        return newValue + unit;
+    }
+
+
     let BASE_URL = chatbot_container_element.getAttribute('data-chat-bot-url');
 
     if(!BASE_URL){
@@ -42,8 +63,8 @@
     style.innerHTML = `
         #chatbot-toggle {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: ${floatingPositionBottom};
+            right: ${floatingPositionRight};
             width: 60px;
             height: 60px;
             background: #0078ff;
@@ -67,8 +88,8 @@
             border-radius: 12px;
             box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
             position: fixed;
-            bottom: 90px;
-            right: 20px;
+            bottom: ${calculateFloatingPositionBottom(floatingPositionBottom)};
+            right: ${floatingPositionRight};
             display: none;
             flex-direction: column;
             overflow: hidden;
@@ -176,7 +197,7 @@
     chatbotContainer.id = "chatbot-widget";
     chatbotContainer.innerHTML = `
         <div class="chat-header">
-            <span>💬 Chatbot AI</span>
+            <span>💬 ${chatBotName}</span>
             <button id="minimize-btn">
 <?xml version="1.0" encoding="utf-8"?>
 

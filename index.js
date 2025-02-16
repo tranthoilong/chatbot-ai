@@ -3,8 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
-// const User = require("./src/models/User");
-// const initDB = require("./src/core/initDB");
 const authRoutes = require("./src/routes/authRoutes");
 const { getUserByApiKey } = require("./src/utils/authUtils");
 
@@ -16,47 +14,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-
-
-const TYPE_CHAT = Object.freeze({
-    PRO: "pro",
-    PREMIUM: "premium",
-    FREE_TRIAL: "free trial"
-});
-
-
-let data_test = [
-    {
-        id: 123,
-        userId: 1,
-        username: "LongDevLor",
-        type_chat:TYPE_CHAT.BASIC,
-        expiresAt:  !true?"2025-02-01": new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString() 
-    },
-    {
-        id: 124,
-        userId: 2,
-        username: "UserTest",
-        type_chat: TYPE_CHAT.PREMIUM,
-        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() 
-    },
-    {
-        id: 125,
-        userId: 3,
-        username: "GuestUser",
-        type_chat: TYPE_CHAT.TRIAL,
-        expiresAt: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString()
-    }
-];
-
-function getDataInListById(id) {
-    let user = data_test.find((item) => item.id === parseInt(id));
-    if (new Date(user.expiresAt) < new Date()) {
-        return null;
-    }
-    return user;
-}
-
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -64,43 +21,46 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 
 app.post("/chat", async (req, res) => {
-    const {message,api_key} = req.body;
+    const { message, api_key } = req.body;
     try {
         console.log(api_key);
-    if(!api_key){
-        return res.status(403).json({error: "Invalid API Key"});
-    }
-    let user = await getUserByApiKey(api_key);
-    if(!user) {
-        res.status(403).json({error: "Invalid API Key"});
-    }
-    console.log(user);
-    // res.json({ response:message });
-    try {
-        const response = await axios.post(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
-            {
-                contents: [
-                    { parts: [
-                        { text: "Nếu có ai hỏi thông tin về bạn, bạn chỉ cung cập thông tin là 'Tôi là một bot chat do LongDevLor phát triển.'"},
-                        { text: message},
-                    ] },
-                ]
-            },
-            { params: { key: API_KEY } }
-        );
 
-        res.json({ response: response.data.candidates[0].content.parts[0].text });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error connecting to AI" });
-    }
+        if (!api_key) {
+            return res.json({ response: "Đang có sự cố xảy ra !!!" });
+        }
 
-    }catch(err) {
-        console.error(error);
-        res.status(500).json({ error: "Error connecting to AI" });
-    }
+        let user = await getUserByApiKey(api_key);
+        if (!user) {
+            return res.json({ response: "Đang có sự cố xảy ra !!!" });
+        }
 
+        console.log(user);
+
+        try {
+            const response = await axios.post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+                {
+                    contents: [
+                        { parts: [
+                            { text: "Nếu có ai hỏi thông tin về bạn, bạn chỉ cung cấp thông tin là 'Tôi là một bot chat do LongDevLor phát triển.'" },
+                            { text: message },
+                        ] }
+                    ]
+                },
+                { params: { key: API_KEY } }
+            );
+
+            return res.json({ response: response.data.candidates[0].content.parts[0].text });
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ error: "Error connecting to AI" });
+        }
+
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Error in processing request" });
+    }
 });
+
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
