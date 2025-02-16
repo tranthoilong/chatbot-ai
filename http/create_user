@@ -3,6 +3,5 @@ curl -X POST "http://localhost:5001/api/auth/register" \
 -d '{
     "username": "newuser",
     "email": "newuser@example.com",
-    "password": "123@Long",
-    "type_account": "premium"
+    "password": "123@Long"
 }'

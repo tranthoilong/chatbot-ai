@@ -3,8 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
 const path = require("path");
-const User = require("./src/models/User");
-const initDB = require("./src/core/initDB");
+// const User = require("./src/models/User");
+// const initDB = require("./src/core/initDB");
 const authRoutes = require("./src/routes/authRoutes");
 const { getUserByApiKey } = require("./src/utils/authUtils");
 
@@ -62,45 +62,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
-app.post("/chat-meta", async (req, res) => {
-    const { message, api_key } = req.body;
-
-    if (!api_key) {
-        return res.status(403).json({ error: "Invalid API Key" });
-    }
-
-    const user = getDataInListById(api_key);
-    console.log(user);
-
-    if (!user) {
-        return res.status(403).json({ error: "Invalid API Key" });
-    }
-    
-
-    if (!message) {
-        return res.status(400).json({ error: "No message provided" });
-    }
-
-    try {
-        const response = await axios.post(
-            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
-            {
-                contents: [
-                    { parts: [
-                        { text: "Nếu có ai hỏi thông tin về bạn, bạn chỉ cung cập thông tin là 'Bạn là một bot chat do LongDevLor phát triển.'"},
-                        { text: message},
-                    ] },
-                ]
-            },
-            { params: { key: API_KEY } }
-        );
-
-        res.json({ response: response.data.candidates[0].content.parts[0].text });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "Error connecting to Gemini AI" });
-    }
-});
 
 app.post("/chat", async (req, res) => {
     const {message,api_key} = req.body;
@@ -113,17 +74,33 @@ app.post("/chat", async (req, res) => {
     if(!user) {
         res.status(403).json({error: "Invalid API Key"});
     }
-    console.log(user.dataValues);
-    res.json({ response:message });
+    console.log(user);
+    // res.json({ response:message });
+    try {
+        const response = await axios.post(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+            {
+                contents: [
+                    { parts: [
+                        { text: "Nếu có ai hỏi thông tin về bạn, bạn chỉ cung cập thông tin là 'Tôi là một bot chat do LongDevLor phát triển.'"},
+                        { text: message},
+                    ] },
+                ]
+            },
+            { params: { key: API_KEY } }
+        );
+
+        res.json({ response: response.data.candidates[0].content.parts[0].text });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: "Error connecting to AI" });
+    }
+
     }catch(err) {
         console.error(error);
-        res.status(500).json({ error: "Error connecting to Gemini AI" });
+        res.status(500).json({ error: "Error connecting to AI" });
     }
 
 });
 
-
-
-initDB().then(() => {
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
-});
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

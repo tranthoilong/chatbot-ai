@@ -2,41 +2,42 @@ const { sequelize, Sequelize } = require("../core/database");
 
 const User = sequelize.define("User", {
     id: {
-        type: Sequelize.DataTypes.INTEGER,
-        autoIncrement: true,
+        type: Sequelize.DataTypes.UUID,
+        defaultValue: Sequelize.literal("gen_random_uuid()"),
         primaryKey: true
     },
     username: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-        unique: true
-    },
-    email: {
-        type: Sequelize.DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true
-        }
-    },
-    password: {
-        type: Sequelize.DataTypes.STRING,
+        type: Sequelize.DataTypes.STRING(255),
         allowNull: false
     },
-    status:{
+    email: {
+        type: Sequelize.DataTypes.STRING(255),
+        allowNull: false
+    },
+    password: {
+        type: Sequelize.DataTypes.STRING(255),
+        allowNull: false
+    },
+    status: {
         type: Sequelize.DataTypes.INTEGER,
         defaultValue: 1
-    }
-    ,
-    type_account: {
-        type: Sequelize.DataTypes.ENUM("free trial", "premium", "pro"),
-        defaultValue: "free trial"
+    },
+    created_at: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+    },
+    updated_at: {
+        type: Sequelize.DataTypes.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
+        onUpdate: Sequelize.literal("CURRENT_TIMESTAMP")
     }
 }, {
-    timestamps: true,
-    underscored: true, 
+    timestamps: false, 
+    underscored: true
 });
+
 module.exports = User;
+
 
 
 

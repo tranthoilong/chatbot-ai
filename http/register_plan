@@ -1,0 +1,4 @@
+curl -X POST http://localhost:5001/api/auth/register-plan \
+     -H "Content-Type: application/json" \
+     -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI5OWZjODM5LTU5YTItNDZjNi1iNjk0LTUyN2NiNGFkNDZkOCIsImlhdCI6MTczOTcxNjQ0NSwiZXhwIjoxNzM5NzIwMDQ1fQ.xxv0_krRyv7xktLLbFD-xI0lFW07f2QZAXBEPVkL56g" \
+     -d '{"planId": "76b5d822-c42d-4692-a296-33182642a8c9"}'
