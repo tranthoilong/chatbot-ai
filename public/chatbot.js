@@ -188,7 +188,12 @@
 
     const chatToggle = document.createElement("div");
     chatToggle.id = "chatbot-toggle";
-    chatToggle.innerHTML = "💬";
+    // chatToggle.innerHTML = "💬";
+    if (botChatAvatar) {
+        chatToggle.innerHTML = `<img src="${botChatAvatar}" alt="Chatbot Avatar" style="width: 100%; height: 100%; border-radius: 50%;">`;
+    } else {
+        chatToggle.innerHTML = "💬";
+    }
     chatToggle.onclick = toggleChatbot;
     document.body.appendChild(chatToggle);
 

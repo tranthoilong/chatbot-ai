@@ -7,6 +7,27 @@
         return;
     }
 
+    let chatBotName = chatbot_container_element.getAttribute('data-chat-bot-name')??'Chatbot AI';
+    let floatingPositionBottom = chatbot_container_element.getAttribute('data-chat-floating-bottom')??'20px';
+    let floatingPositionRight = chatbot_container_element.getAttribute('data-chat-floating-right')??'20px';
+    let botChatAvatar = chatbot_container_element.getAttribute('data-chat-avatar');
+
+    function calculateFloatingPositionBottom(floatingPositionBottom) {
+        let match = floatingPositionBottom.match(/([0-9.-]+)([a-zA-Z%]*)/);
+    
+        if (!match) {
+            return '90px'; 
+        }
+    
+        let baseValue = parseFloat(match[1]) || 20; 
+        let unit = match[2] || 'px';
+    
+        let newValue = baseValue + 70;
+    
+        return newValue + unit;
+    }
+
+
     let BASE_URL = chatbot_container_element.getAttribute('data-chat-bot-url');
 
     if(!BASE_URL){
@@ -42,8 +63,8 @@
     style.innerHTML = `
         #chatbot-toggle {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: ${floatingPositionBottom};
+            right: ${floatingPositionRight};
             width: 60px;
             height: 60px;
             background: #0078ff;
@@ -67,8 +88,8 @@
             border-radius: 12px;
             box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
             position: fixed;
-            bottom: 80px;
-            right: 20px;
+            bottom: ${calculateFloatingPositionBottom(floatingPositionBottom)};
+            right: ${floatingPositionRight};
             display: none;
             flex-direction: column;
             overflow: hidden;
@@ -89,6 +110,14 @@
             font-size: 18px;
             font-weight: bold;
             text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-header svg {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
         }
         .chat-messages {
             flex: 1;
@@ -147,6 +176,13 @@
         .chat-input button:hover {
             background: #005bbf;
         }
+        #minimize-btn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    cursor: pointer;
+}
+
     `;
     document.head.appendChild(style);
 
@@ -160,7 +196,22 @@
     chatbotContainer.className = "chat-container";
     chatbotContainer.id = "chatbot-widget";
     chatbotContainer.innerHTML = `
-        <div class="chat-header">💬 Chatbot AI</div>
+        <div class="chat-header">
+            <span>💬 ${chatBotName}</span>
+            <button id="minimize-btn">
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg fill="#FFFFFF" xmlns="http://www.w3.org/2000/svg" 
+	 width="800px" height="800px" viewBox="0 0 52 52" enable-background="new 0 0 52 52" xml:space="preserve">
+<g>
+	<path d="M50,48.5c0,0.8-0.7,1.5-1.5,1.5h-45C2.7,50,2,49.3,2,48.5v-3C2,44.7,2.7,44,3.5,44h45
+		c0.8,0,1.5,0.7,1.5,1.5V48.5z"/>
+</g>
+</svg>
+
+            </button>
+        </div>
         <div class="chat-messages" id="chatMessages"></div>
         <div class="chat-input">
             <input type="text" id="userInput" placeholder="Nhập tin nhắn...">
@@ -173,6 +224,11 @@
         let chatbot = document.getElementById("chatbot-widget");
         chatbot.classList.toggle("open");
     }
+
+    document.getElementById("minimize-btn").onclick = function() {
+        let chatbot = document.getElementById("chatbot-widget");
+        chatbot.classList.toggle("open");
+    };
 
     window.sendMessage = async function () {
         let message = document.getElementById("userInput").value.trim();
@@ -191,7 +247,7 @@
             let response = await fetch(`${BASE_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message, api_key:API_KEY })
+                body: JSON.stringify({ message, api_key:API_KEY,chat_bot_name:chatBotName })
             });
 
             let data = await response.json();
