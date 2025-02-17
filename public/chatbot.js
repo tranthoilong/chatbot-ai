@@ -247,7 +247,7 @@
             let response = await fetch(`${BASE_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message, api_key:API_KEY })
+                body: JSON.stringify({ message, api_key:API_KEY,chat_bot_name:chatBotName })
             });
 
             let data = await response.json();
