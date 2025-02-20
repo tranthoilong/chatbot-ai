@@ -4,10 +4,30 @@ const DATABASE_URL = `postgres://${process.env.POSTGRES_USER}:${process.env.POST
 
 console.log("🔗 Connecting to DB:", DATABASE_URL);
 
-const sequelize = new Sequelize(DATABASE_URL, {
+// const sequelize = new Sequelize(DATABASE_URL, {
+//     dialect: "postgres",
+//     logging: false,
+// });
+
+let sequelize
+
+if(process.env.HOST!="localhost")
+{
+ sequelize = new Sequelize(DATABASE_URL, {
+    dialect: "postgres",
+    logging: false,
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false,
+        },
+    },
+});}else{
+ sequelize = new Sequelize(DATABASE_URL, {
     dialect: "postgres",
     logging: false,
 });
+}
 
 (async () => {
     try {

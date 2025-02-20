@@ -3,11 +3,199 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test ChatBot</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Trang Web Đẹp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+
+        header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: background-color 0.3s ease;
+        }
+
+        header.scrolled {
+            background-color: #0056b3;
+        }
+
+        header nav {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 18px;
+            transition: color 0.3s ease;
+        }
+
+        header nav a:hover {
+            color: #ffcc00;
+        }
+
+        .hero {
+            background: url('https://via.placeholder.com/1500x600') center center/cover no-repeat;
+            height: 100vh;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            flex-direction: column;
+            transition: opacity 0.3s ease;
+        }
+
+        .hero h1 {
+            font-size: 50px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 40px;
+        }
+
+        .cta-btn {
+            background-color: #28a745;
+            padding: 15px 30px;
+            color: white;
+            font-size: 18px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta-btn:hover {
+            background-color: #218838;
+        }
+
+        .content-section {
+            padding: 60px 20px;
+            background-color: #fff;
+            text-align: center;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .content-section.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .content-section h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+
+        .content-section p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            width: 100%;
+            bottom: 0;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-    <div id="chatbot-container" data-bot-chat-key="ba7fa1f8-85cb-4f1e-b874-de25578b9360" data-dev-mode-lchat="true" data-chat-bot-url="http://localhost:5001">
-    <script src="http://localhost:5001/chatbot.js"></script> 
-    </div>
+
+    <header id="header">
+        <nav>
+            <a href="#">Trang chủ</a>
+            <a href="#">Giới thiệu</a>
+            <a href="#">Dịch vụ</a>
+            <a href="#">Liên hệ</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Chào Mừng Đến Với Trang Web Của Chúng Tôi</h1>
+        <p>Chúng tôi cung cấp những dịch vụ tốt nhất cho bạn</p>
+        <a href="#services" class="cta-btn">Khám Phá Ngay</a>
+    </section>
+
+    <section class="content-section" id="services">
+        <h2>Dịch Vụ Của Chúng Tôi</h2>
+        <p>Chúng tôi cung cấp các giải pháp chuyên nghiệp để giúp doanh nghiệp của bạn phát triển và thịnh vượng. Từ thiết kế web, marketing cho đến các giải pháp công nghệ, chúng tôi đều có thể hỗ trợ bạn.</p>
+    </section>
+
+    <section class="content-section">
+        <h2>Tại Sao Chọn Chúng Tôi?</h2>
+        <p>Với đội ngũ chuyên gia giàu kinh nghiệm và sự cam kết mạnh mẽ, chúng tôi mang lại cho bạn những sản phẩm và dịch vụ chất lượng, hiệu quả cao.</p>
+    </section>
+
+    <footer>
+        <p>© 2025 Trang Web Của Chúng Tôi. <a href="#">Điều Khoản Sử Dụng</a> | <a href="#">Chính Sách Bảo Mật</a></p>
+    </footer>
+
+    <script>
+        window.addEventListener('scroll', function () {
+            var header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        const sections = document.querySelectorAll('.content-section');
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        sections.forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+        <div id="chatbot-container" 
+        data-bot-chat-key="a14c165a-dbc7-4156-8c5d-c6066d29e338" 
+        data-dev-mode-lchat="true"
+        data-chat-avatar="https://anhnail.com/wp-content/uploads/2024/11/Hinh-gai-xinh-2009-toc-dai-cute.jpg" 
+        data-chat-bot-url="http://localhost:5001">
+        </div>
+        <script src=" http://localhost:5001/chatbot.js"></script> 
+        
+       
+
 </body>
 </html>

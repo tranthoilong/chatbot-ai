@@ -1,2 +1,2 @@
 curl -X POST "http://localhost:5001/api/auth/create-api-key" \
--H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjI5OWZjODM5LTU5YTItNDZjNi1iNjk0LTUyN2NiNGFkNDZkOCIsImlhdCI6MTczOTcxNjQ0NSwiZXhwIjoxNzM5NzIwMDQ1fQ.xxv0_krRyv7xktLLbFD-xI0lFW07f2QZAXBEPVkL56g"
+-H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdmOGUyZTNhLWNlYjgtNDZjOC1iNDhiLThlZTU1ZmJhYzI1YSIsImlhdCI6MTc0MDA1MTYzMCwiZXhwIjoxNzQyNjQzNjMwfQ.ib_Ck81bHolO8iOapdpKGV7PSObxTrYYXQBGVQhUK2w"

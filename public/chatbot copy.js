@@ -1,12 +1,22 @@
 (function () {
 
     let chatbot_container_element = document.getElementById("chatbot-container");
+    let uuid = '';
 
     if (!chatbot_container_element){
         console.error("Chatbot container element not found");
         return;
     }
-
+    function generateUniqueCode() {
+        const timestamp = Date.now().toString(36); 
+        
+        const randomNum = Math.floor(Math.random() * 100000).toString(36); 
+        
+        const uniqueCode = timestamp + randomNum;
+        
+        return uniqueCode;
+    }
+    
     let chatBotName = chatbot_container_element.getAttribute('data-chat-bot-name')??'Chatbot AI';
     let floatingPositionBottom = chatbot_container_element.getAttribute('data-chat-floating-bottom')??'20px';
     let floatingPositionRight = chatbot_container_element.getAttribute('data-chat-floating-right')??'20px';
@@ -34,6 +44,23 @@
         console.error("Chatbot container element must have data-chat-bot-url attribute");
         return;
     }
+
+    if (BASE_URL.endsWith('/')) {
+  BASE_URL = BASE_URL.slice(0, -1);
+}
+
+function formatChatbotAnswer(text) {
+    return text
+        .replace(/\n\n/g, '</p><p>') 
+        .replace(/\n/g, '<br>')      
+        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') 
+        .replace(/\* (.*?)\n/g, '<li>$1</li>') 
+        .replace(/<li>/g, '<ul><li>')        
+        .replace(/<\/li>(?!<li>)/g, '</li></ul>')
+        .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');; 
+}
+
+
     console.log(BASE_URL)
 
     if (document.getElementById("chatbot-widget")) return;
@@ -139,7 +166,7 @@
             background: #0078ff;
             color: white;
             align-self: flex-end;
-            text-align: right;
+            // text-align: right;
             border-top-right-radius: 0;
         }
         .bot-message {
@@ -188,7 +215,12 @@
 
     const chatToggle = document.createElement("div");
     chatToggle.id = "chatbot-toggle";
-    chatToggle.innerHTML = "💬";
+    // chatToggle.innerHTML = "💬";
+    if (botChatAvatar) {
+        chatToggle.innerHTML = `<img src="${botChatAvatar}" alt="Chatbot Avatar" style="width: 100%; height: 100%; border-radius: 50%;">`;
+    } else {
+        chatToggle.innerHTML = "💬";
+    }
     chatToggle.onclick = toggleChatbot;
     document.body.appendChild(chatToggle);
 
@@ -223,6 +255,11 @@
     function toggleChatbot() {
         let chatbot = document.getElementById("chatbot-widget");
         chatbot.classList.toggle("open");
+        if(!uuid){
+        uuid = generateUniqueCode()
+
+        }
+        console.log(uuid)
     }
 
     document.getElementById("minimize-btn").onclick = function() {
@@ -247,7 +284,7 @@
             let response = await fetch(`${BASE_URL}/chat`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message, api_key:API_KEY,chat_bot_name:chatBotName })
+                body: JSON.stringify({ message, api_key:API_KEY,chat_bot_name:chatBotName,id_chat:uuid })
             });
 
             let data = await response.json();
@@ -255,12 +292,15 @@
 
             let botMessage = document.createElement("div");
             botMessage.className = "message bot-message";
-            botMessage.textContent = botReply;
+            // botMessage.textContent =botReply;
+            botMessage.innerHTML =formatChatbotAnswer(botReply);
+
             chatMessages.appendChild(botMessage);
 
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
         } catch (error) {
+            console.error("URL ", BASE_URL);
             console.error("Lỗi API:", error);
         }
     };

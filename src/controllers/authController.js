@@ -19,9 +19,20 @@ async function register(req, res) {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await User.create({ username, email, password: hashedPassword });
 
+
+        const planId = '76b5d822-c42d-4692-a296-33182642a8c9'
+        const plan = await Plan.findByPk(planId);
+        const newUserPlan = await UserPlan.create({
+            user_id: newUser.id,
+            plan_id: planId,
+            start_date: new Date(),
+            end_date: new Date(new Date().setMonth(new Date().getMonth() + plan.duration)),
+            status: 1 
+        });
+
         res.status(201).json({
             message: "Đăng ký thành công!",
-            data: { id: newUser.id, username: newUser.username, email: newUser.email }
+            data: { id: newUser.id, username: newUser.username, email: newUser.email,newUserPlan }
         });
 
     } catch (e) {
