@@ -62,7 +62,7 @@ function formatChatbotAnswer(text) {
 }
 
 
-    console.log(BASE_URL)
+    // console.log(BASE_URL)
 
     if (document.getElementById("chatbot-widget")) return;
 
@@ -80,7 +80,7 @@ function formatChatbotAnswer(text) {
     let DEV_MODE = getDevMode() || false;
 
     if(DEV_MODE){
-        console.log("🔑 API Key:", API_KEY);
+        // console.log("🔑 API Key:", API_KEY);
     }
 
     if (!API_KEY) {
@@ -285,7 +285,7 @@ function formatChatbotAnswer(text) {
         uuid = generateUniqueCode()
 
         }
-        console.log(uuid)
+        // console.log(uuid)
     }
 
     document.getElementById("minimize-btn").onclick = function() {
@@ -324,7 +324,7 @@ function formatChatbotAnswer(text) {
             let botReply = data.response || "Xin lỗi, có lỗi xảy ra!";
 
             if(data){
-                console.log(data)
+                // console.log(data)
                 isProcessing=false
             }
 
@@ -338,7 +338,7 @@ function formatChatbotAnswer(text) {
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
         } catch (error) {
-            console.error("URL ", BASE_URL);
+            // console.error("URL ", BASE_URL);
             console.error("Lỗi API:", error);
         }
         toggleSendButtonState();

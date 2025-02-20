@@ -73,7 +73,7 @@ async function createPrompt(id,message) {
     // return result;
     let result = '';
     const chatMessages = await getChatHistory(id);
-    console.log('chatMessages : ', chatMessages);
+    // console.log('chatMessages : ', chatMessages);
     try {
         if(chatMessages){
             const chatHistory = chatMessages.map(item => `Q: ${item.question} - A: ${item.answer}`).join("\n");
@@ -97,7 +97,7 @@ async function createPrompt(id,message) {
             ];
         }
     
-        console.log(result);
+        // console.log(result);
     
         return result;
     }catch(e){
