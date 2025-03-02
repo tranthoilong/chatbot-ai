@@ -4,7 +4,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Trang web cung cấp dịch vụ thiết kế web, phát triển web, SEO và marketing cho doanh nghiệp của bạn. Chúng tôi giúp bạn đạt được thành công trực tuyến.">
+    <meta name="keywords" content="Thiết kế web, Phát triển web, SEO, Marketing, Dịch vụ web, Tư vấn SEO">
+    <meta name="author" content="Trang Web Của Chúng Tôi">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="Trang Web Của Chúng Tôi - Dịch Vụ Web Chuyên Nghiệp">
+    <meta property="og:description" content="Cung cấp các dịch vụ thiết kế web, phát triển ứng dụng web, SEO và marketing. Chúng tôi giúp doanh nghiệp của bạn phát triển bền vững và hiệu quả.">
+    <meta property="og:image" content="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474077wQG/wallpaper-4k_105912678.jpg">
+    <meta property="og:url" content="https://www.trangwebcuachungtoi.com">
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Trang Web Của Chúng Tôi - Dịch Vụ Web Chuyên Nghiệp">
+    <meta name="twitter:description" content="Trang web chuyên cung cấp các dịch vụ thiết kế web, phát triển ứng dụng web, SEO và marketing. Giúp doanh nghiệp của bạn phát triển nhanh chóng và hiệu quả.">
+    <meta name="twitter:image" content="https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474077wQG/wallpaper-4k_105912678.jpg">
+    
     <title>Trang Web Đẹp</title>
+    <!-- Font Awesome for Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    
     <style>
         * {
             margin: 0;
@@ -16,6 +39,11 @@
             font-family: 'Arial', sans-serif;
             background-color: #f9f9f9;
             color: #333;
+            scroll-behavior: smooth; /* Tạo hiệu ứng cuộn mượt mà */
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         header {
@@ -53,7 +81,7 @@
         }
 
         .hero {
-            background: url('https://via.placeholder.com/1500x600') center center/cover no-repeat;
+            background: url('https://img.tripi.vn/cdn-cgi/image/width=700,height=700/https://gcs.tripi.vn/public-tripi/tripi-feed/img/474077wQG/wallpaper-4k_105912678.jpg') center center/cover no-repeat;
             height: 100vh;
             color: white;
             display: flex;
@@ -95,6 +123,7 @@
             opacity: 0;
             transform: translateY(50px);
             transition: opacity 0.5s ease, transform 0.5s ease;
+            margin-top: 60px;
         }
 
         .content-section.show {
@@ -110,6 +139,62 @@
         .content-section p {
             font-size: 18px;
             color: #555;
+        }
+
+        .service-cards {
+            display: flex;
+            justify-content: space-around;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .service-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 30%;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-section {
+            background-color: #f0f0f0;
+            padding: 60px 20px;
+        }
+
+        .testimonials {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            text-align: center;
+        }
+
+        .testimonial-card img {
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
         }
 
         footer {
@@ -130,20 +215,204 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        /* Contact Info Section */
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 60px;
+            padding: 0 20px;
+        }
+
+        .contact-card {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 30%;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .contact-card i {
+            font-size: 40px;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .contact-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .contact-card p {
+            font-size: 18px;
+            color: #555;
+        }
+        
+        .contact-link {
+            color: #007bff;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        
+        .contact-link:hover {
+            text-decoration: underline;
+        }
+
+
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .service-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .service-card {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+
+            .testimonials {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .testimonial-card {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+
+            .contact-info {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .contact-card {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+
+            .hero h1 {
+                font-size: 36px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            header nav {
+                flex-direction: column;
+            }
+
+            header nav a {
+                margin: 10px 0;
+                font-size: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 28px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            .cta-btn {
+                font-size: 16px;
+                padding: 10px 20px;
+            }
+
+            .content-section h2 {
+                font-size: 30px;
+            }
+
+            .service-card {
+                width: 100%;
+            }
+        }
+
+        .why-us-cards {
+            display: flex;
+            justify-content: space-around;
+            gap: 30px;
+            margin-top: 40px;
+            padding: 0 20px;
+        }
+
+        .why-us-card {
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 22%;
+            transition: transform 0.3s ease;
+        }
+
+        .why-us-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .why-us-card i {
+            font-size: 40px;
+            color: #007bff;
+            margin-bottom: 20px;
+        }
+
+        .why-us-card h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .why-us-card p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .why-us-card ul {
+            list-style-type: none;
+            padding: 0;
+            font-size: 16px;
+            color: #555;
+        }
+
+        .why-us-card ul li {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .why-us-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .why-us-card {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <header id="header">
         <nav>
-            <a href="#">Trang chủ</a>
-            <a href="#">Giới thiệu</a>
-            <a href="#">Dịch vụ</a>
-            <a href="#">Liên hệ</a>
+            <a href="#home">Trang chủ</a>
+            <a href="#services">Giới thiệu</a>
+            <a href="#why-us">Dịch vụ</a>
+            <a href="#contact">Liên hệ</a>
         </nav>
     </header>
 
-    <section class="hero">
+    <section class="hero" id="home">
         <h1>Chào Mừng Đến Với Trang Web Của Chúng Tôi</h1>
         <p>Chúng tôi cung cấp những dịch vụ tốt nhất cho bạn</p>
         <a href="#services" class="cta-btn">Khám Phá Ngay</a>
@@ -151,17 +420,113 @@
 
     <section class="content-section" id="services">
         <h2>Dịch Vụ Của Chúng Tôi</h2>
-        <p>Chúng tôi cung cấp các giải pháp chuyên nghiệp để giúp doanh nghiệp của bạn phát triển và thịnh vượng. Từ thiết kế web, marketing cho đến các giải pháp công nghệ, chúng tôi đều có thể hỗ trợ bạn.</p>
+        <p>Chúng tôi cung cấp các giải pháp chuyên nghiệp để giúp doanh nghiệp của bạn phát triển và thịnh vượng. Dưới đây là một số dịch vụ của chúng tôi:</p>
+        
+        <div class="service-cards">
+            <div class="service-card">
+                <img src="https://blog.webico.vn/wp-content/uploads/2016/07/design1.jpg" alt="Web Design">
+                <h3>Thiết kế Web</h3>
+                <p>Chúng tôi cung cấp các dịch vụ thiết kế web chuyên nghiệp, từ các trang web đơn giản đến các ứng dụng web phức tạp.</p>
+            </div>
+            <div class="service-card">
+                <img src="https://xbsoftware.com/wp-content/uploads/2023/03/website-development-process-full-guide-1-twi.jpg" alt="Web Development">
+                <h3>Phát triển Web</h3>
+                <p>Chúng tôi giúp phát triển các ứng dụng web tối ưu, nhanh chóng và hiệu quả cho doanh nghiệp của bạn.</p>
+            </div>
+            <div class="service-card">
+                <img src="https://www.ali.com.vn/hoanghung/UploadFile/images/lam-the-nao-de-ngan-chan-seo-mu-den.jpg" alt="SEO & Marketing">
+                <h3>SEO & Marketing</h3>
+                <p>Chúng tôi cung cấp các dịch vụ SEO để giúp trang web của bạn tiếp cận nhiều khách hàng hơn và đạt được vị trí cao trên công cụ tìm kiếm.</p>
+            </div>
+        </div>
     </section>
 
-    <section class="content-section">
+    <section class="content-section" id="why-us">
         <h2>Tại Sao Chọn Chúng Tôi?</h2>
-        <p>Với đội ngũ chuyên gia giàu kinh nghiệm và sự cam kết mạnh mẽ, chúng tôi mang lại cho bạn những sản phẩm và dịch vụ chất lượng, hiệu quả cao.</p>
+        <p>Với đội ngũ chuyên gia giàu kinh nghiệm và sự cam kết mạnh mẽ, chúng tôi mang lại cho bạn những sản phẩm và dịch vụ chất lượng, hiệu quả cao. Dưới đây là lý do tại sao bạn nên chọn chúng tôi:</p>
+        
+        <div class="why-us-cards">
+            <div class="why-us-card">
+                <i class="fas fa-users"></i>
+                <h3>Đội Ngũ Chuyên Gia</h3>
+                <p>Chúng tôi sở hữu đội ngũ chuyên gia giàu kinh nghiệm trong nhiều lĩnh vực, từ thiết kế web, phát triển ứng dụng đến SEO & Marketing, đảm bảo cung cấp những giải pháp tối ưu cho khách hàng.</p>
+            </div>
+            <div class="why-us-card">
+                <i class="fas fa-cogs"></i>
+                <h3>Giải Pháp Tối Ưu</h3>
+                <p>Chúng tôi không chỉ cung cấp dịch vụ mà còn cung cấp các giải pháp tối ưu cho mọi vấn đề mà doanh nghiệp của bạn đang gặp phải, giúp bạn phát triển bền vững và hiệu quả.</p>
+            </div>
+            <div class="why-us-card">
+                <i class="fas fa-thumbs-up"></i>
+                <h3>Chất Lượng Đảm Bảo</h3>
+                <p>Chúng tôi cam kết mang lại sản phẩm và dịch vụ với chất lượng cao nhất, luôn đảm bảo tiến độ và đạt được các mục tiêu đề ra, giúp khách hàng hài lòng tuyệt đối.</p>
+            </div>
+            <div class="why-us-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Thành Công Đã Được Chứng Minh</h3>
+                <p>Chúng tôi đã giúp hàng ngàn khách hàng tăng trưởng mạnh mẽ về doanh thu và hiệu quả kinh doanh. Dưới đây là một số con số thực tế về thành công của chúng tôi:</p>
+                <ul>
+                    <li>+500 website được thiết kế và phát triển.</li>
+                    <li>+100 khách hàng hài lòng trong lĩnh vực SEO.</li>
+                    <li>+200 chiến dịch marketing hiệu quả, mang lại doanh thu tăng trưởng 30%.</li>
+                </ul>
+            </div>
+        </div>
     </section>
+
+    <section class="testimonial-section" id="contact">
+        <h2>Đánh Giá Khách Hàng</h2>
+        <div class="testimonials">
+            <div class="testimonial-card">
+                <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="Customer">
+                <p>"Dịch vụ tuyệt vời! Tôi thực sự hài lòng với kết quả mà đội ngũ mang lại."</p>
+                <strong>Nguyễn Minh</strong>
+            </div>
+            <div class="testimonial-card">
+                <img src="https://randomuser.me/api/portraits/women/1.jpg" alt="Customer">
+                <p>"Chất lượng tuyệt vời, tôi đã nhận được sự hỗ trợ nhanh chóng và hiệu quả."</p>
+                <strong>Nguyễn Thị Lan</strong>
+            </div>
+            <div class="testimonial-card">
+                <img src="https://randomuser.me/api/portraits/men/2.jpg" alt="Customer">
+                <p>"Mọi thứ rất hoàn hảo. Đội ngũ làm việc rất chuyên nghiệp và nhiệt tình."</p>
+                <strong>Trần Duy</strong>
+            </div>
+        </div>
+    </section>
+
+    <section class="contact-info">
+        <div class="contact-card">
+            <i class="fas fa-envelope"></i>
+            <h3>Email</h3>
+            <!-- Thêm liên kết mailto -->
+            <a href="mailto:tranthoilong@gmail.com" class="contact-link">tranthoilong@gmail.com</a>
+        </div>
+        <div class="contact-card">
+            <i class="fas fa-phone-alt"></i>
+            <h3>Số Điện Thoại</h3>
+            <!-- Thêm liên kết tel -->
+            <a href="tel:+84383892964" class="contact-link">0383892964</a>
+        </div>
+        <div class="contact-card">
+            <i class="fas fa-map-marker-alt"></i>
+            <h3>Địa Chỉ</h3>
+            <p>TP.HCM, Việt Nam</p>
+        </div>
+    </section>
+
 
     <footer>
         <p>© 2025 Trang Web Của Chúng Tôi. <a href="#">Điều Khoản Sử Dụng</a> | <a href="#">Chính Sách Bảo Mật</a></p>
     </footer>
+
+    <div id="chatbot-container" 
+        data-bot-chat-key="a14c165a-dbc7-4156-8c5d-c6066d29e338" 
+        data-dev-mode-lchat="true"
+        data-chat-avatar="https://cdn-icons-png.flaticon.com/512/8943/8943377.png" 
+        data-chat-bot-url="https://chatbot.l-code.top">
+    </div>
+    <script src="https://chatbot.l-code.top/chatbot.js"></script>
 
     <script>
         window.addEventListener('scroll', function () {
@@ -187,15 +552,6 @@
             observer.observe(section);
         });
     </script>
-        <div id="chatbot-container" 
-        data-bot-chat-key="a14c165a-dbc7-4156-8c5d-c6066d29e338" 
-        data-dev-mode-lchat="true"
-        data-chat-avatar="https://anhnail.com/wp-content/uploads/2024/11/Hinh-gai-xinh-2009-toc-dai-cute.jpg" 
-        data-chat-bot-url="http://localhost:5001">
-        </div>
-        <script src=" http://localhost:5001/chatbot.js"></script> 
-        
-       
 
 </body>
 </html>
