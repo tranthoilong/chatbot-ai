@@ -61,21 +61,42 @@ app.get("/chat-scenarios", (req, res) => {
             id: "tech-support-1",
             name: "Hỗ trợ kỹ thuật cơ bản",
             messages: [
-                
+                {
+                    question: "Làm thế nào để khởi động lại máy tính một cách an toàn?",
+                    answer: "Để khởi động lại máy tính an toàn, bạn nên: 1. Lưu tất cả công việc đang làm, 2. Đóng tất cả các ứng dụng, 3. Nhấn Start > Restart. Tránh tắt đột ngột bằng nút nguồn."
+                },
+                {
+                    question: "Máy tính của tôi chạy chậm, tôi nên làm gì?",
+                    answer: "Có một số cách để cải thiện tốc độ máy tính: 1. Dọn dẹp ổ cứng, 2. Gỡ bỏ phần mềm không cần thiết, 3. Kiểm tra và diệt virus, 4. Tăng RAM nếu có thể."
+                }
             ]
         },
         {
             id: "product-inquiry",
             name: "Tư vấn sản phẩm",
             messages: [
-                
+                {
+                    question: "Sản phẩm này có bảo hành không?",
+                    answer: "Vâng, tất cả sản phẩm của chúng tôi đều có chế độ bảo hành 12 tháng. Bạn sẽ được hỗ trợ miễn phí trong thời gian bảo hành."
+                },
+                {
+                    question: "Có thể thanh toán bằng những hình thức nào?",
+                    answer: "Chúng tôi chấp nhận nhiều hình thức thanh toán: 1. Tiền mặt, 2. Chuyển khoản ngân hàng, 3. Thẻ tín dụng/ghi nợ, 4. Ví điện tử."
+                }
             ]
         },
         {
             id: "order-tracking",
             name: "Theo dõi đơn hàng",
             messages: [
-
+                {
+                    question: "Tôi đã đặt hàng, nhưng không nhận được thông báo giao hàng. Làm thế nào để kiểm tra trạng thái đơn hàng?",
+                    answer: "Bạn có thể kiểm tra trạng thái đơn hàng bằng cách truy cập vào trang web của chúng tôi và sử dụng mã đơn hàng của bạn. Nếu vẫn không nhận được thông báo, vui lòng liên hệ với chúng tôi để được hỗ trợ."
+                },
+                {
+                    question: "Tôi có thể hủy đơn hàng được không?",
+                    answer: "Bạn có thể hủy đơn hàng trong vòng 24 giờ sau khi đặt hàng. Vui lòng liên hệ với chúng tôi để thực hiện hủy đơn hàng."
+                }
             ]
         }
     ]
