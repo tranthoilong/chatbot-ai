@@ -47,22 +47,19 @@
     }
 
     if (BASE_URL.endsWith('/')) {
-  BASE_URL = BASE_URL.slice(0, -1);
-}
+        BASE_URL = BASE_URL.slice(0, -1);
+    }
 
-function formatChatbotAnswer(text) {
-    return text
-        .replace(/\n\n/g, '</p><p>') 
-        .replace(/\n/g, '<br>')      
-        .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') 
-        .replace(/\* (.*?)\n/g, '<li>$1</li>') 
-        .replace(/<li>/g, '<ul><li>')        
-        .replace(/<\/li>(?!<li>)/g, '</li></ul>')
-        .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');; 
-}
-
-
-    // console.log(BASE_URL)
+    function formatChatbotAnswer(text) {
+        return text
+            .replace(/\n\n/g, '</p><p>') 
+            .replace(/\n/g, '<br>')      
+            .replace(/\*\*(.*?)\*\*/g, '<b>$1</b>') 
+            .replace(/\* (.*?)\n/g, '<li>$1</li>') 
+            .replace(/<li>/g, '<ul><li>')        
+            .replace(/<\/li>(?!<li>)/g, '</li></ul>')
+            .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');; 
+    }
 
     if (document.getElementById("chatbot-widget")) return;
 
@@ -167,7 +164,6 @@ function formatChatbotAnswer(text) {
             background: #0078ff;
             color: white;
             align-self: flex-end;
-            // text-align: right;
             border-top-right-radius: 0;
         }
         .bot-message {
@@ -205,43 +201,84 @@ function formatChatbotAnswer(text) {
             background: #005bbf;
         }
         #minimize-btn {
-    border: none;
-    background: transparent;
-    padding: 0;
-    cursor: pointer;
-}
+            border: none;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+        }
 
-.chat-input button {
-    padding: 12px 15px;
-    background:rgb(38, 0, 255); 
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-left: 10px;
-    border-radius: 6px;
-    font-weight: bold;
-    transition: background 0.3s ease;
-}
+        .chat-input button {
+            padding: 12px 15px;
+            background:rgb(38, 0, 255); 
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-left: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
 
-.chat-input button:hover {
-    background: rgb(31, 8, 160); 
-}
+        .chat-input button:hover {
+            background: rgb(31, 8, 160); 
+        }
 
-.chat-input button.disabled {
-    background: #BDBDBD; 
-    cursor: not-allowed; 
-}
+        .chat-input button.disabled {
+            background: #BDBDBD; 
+            cursor: not-allowed; 
+        }
 
-.chat-input button.disabled:hover {
-    background: #BDBDBD; 
-}
+        .chat-input button.disabled:hover {
+            background: #BDBDBD; 
+        }
 
+        @keyframes typing {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        .typing-indicator {
+            display: flex;
+            padding: 10px;
+            gap: 5px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #606060;
+            border-radius: 50%;
+        }
+
+        .typing-dot:nth-child(1) { animation: typing 1s infinite; }
+        .typing-dot:nth-child(2) { animation: typing 1s infinite 0.2s; }
+        .typing-dot:nth-child(3) { animation: typing 1s infinite 0.4s; }
+
+        .suggestion-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px;
+            background: white;
+        }
+        .suggestion-chip {
+            background: #e3f2fd;
+            padding: 8px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            cursor: pointer;
+            border: 1px solid #90caf9;
+            transition: all 0.2s ease;
+        }
+        .suggestion-chip:hover {
+            background: #bbdefb;
+        }
     `;
     document.head.appendChild(style);
 
     const chatToggle = document.createElement("div");
     chatToggle.id = "chatbot-toggle";
-    // chatToggle.innerHTML = "💬";
     if (botChatAvatar) {
         chatToggle.innerHTML = `<img src="${botChatAvatar}" alt="Chatbot Avatar" style="width: 100%; height: 100%; border-radius: 50%;">`;
     } else {
@@ -271,6 +308,7 @@ function formatChatbotAnswer(text) {
             </button>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
+        <div class="suggestion-chips" id="suggestionChips"></div>
         <div class="chat-input">
             <input type="text" id="userInput" placeholder="Nhập tin nhắn...">
             <button onclick="sendMessage()">➤</button>
@@ -278,14 +316,50 @@ function formatChatbotAnswer(text) {
     `;
     document.body.appendChild(chatbotContainer);
 
+    async function loadSuggestions() {
+        try {
+            const response = await fetch(`${BASE_URL}/chat-scenarios`);
+            const data = await response.json();
+            return data.scenarios;
+        } catch (error) {
+            console.error("Error loading suggestions:", error);
+            return [];
+        }
+    }
+
+    function displayWelcomeMessage() {
+        const chatMessages = document.getElementById("chatMessages");
+        const welcomeMessage = document.createElement("div");
+        welcomeMessage.className = "message bot-message";
+        welcomeMessage.innerHTML = `Xin chào! Tôi là ${chatBotName}. Tôi có thể giúp gì cho bạn?`;
+        chatMessages.appendChild(welcomeMessage);
+    }
+
+    async function displaySuggestions() {
+        const scenarios = await loadSuggestions();
+        const suggestionChips = document.getElementById("suggestionChips");
+        suggestionChips.innerHTML = "";
+
+        scenarios.forEach(scenario => {
+            const chip = document.createElement("div");
+            chip.className = "suggestion-chip";
+            chip.textContent = scenario.name;
+            chip.onclick = () => {
+                document.getElementById("userInput").value = scenario.messages[0].question;
+                sendMessage();
+            };
+            suggestionChips.appendChild(chip);
+        });
+    }
+
     function toggleChatbot() {
         let chatbot = document.getElementById("chatbot-widget");
         chatbot.classList.toggle("open");
         if(!uuid){
-        uuid = generateUniqueCode()
-
+            uuid = generateUniqueCode();
+            displayWelcomeMessage();
+            displaySuggestions();
         }
-        // console.log(uuid)
     }
 
     document.getElementById("minimize-btn").onclick = function() {
@@ -293,17 +367,30 @@ function formatChatbotAnswer(text) {
         chatbot.classList.toggle("open");
     };
 
+    function showTypingIndicator() {
+        const chatMessages = document.getElementById("chatMessages");
+        const typingDiv = document.createElement("div");
+        typingDiv.className = "message bot-message typing-indicator";
+        typingDiv.innerHTML = `
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+        `;
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return typingDiv;
+    }
+
     window.sendMessage = async function () {
         if (isProcessing) {
             return;  
         }
-       
 
         let message = document.getElementById("userInput").value.trim();
         let chatMessages = document.getElementById("chatMessages");
 
         if (!message) return;
-        isProcessing=true
+        isProcessing = true;
         toggleSendButtonState();
 
         let userMessage = document.createElement("div");
@@ -312,6 +399,9 @@ function formatChatbotAnswer(text) {
         chatMessages.appendChild(userMessage);
 
         document.getElementById("userInput").value = "";
+
+        // Show typing indicator
+        const typingIndicator = showTypingIndicator();
 
         try {
             let response = await fetch(`${BASE_URL}/chat`, {
@@ -324,22 +414,22 @@ function formatChatbotAnswer(text) {
             let botReply = data.response || "Xin lỗi, có lỗi xảy ra!";
 
             if(data){
-                // console.log(data)
-                isProcessing=false
+                isProcessing = false;
             }
+
+            // Remove typing indicator
+            typingIndicator.remove();
 
             let botMessage = document.createElement("div");
             botMessage.className = "message bot-message";
-            // botMessage.textContent =botReply;
-            botMessage.innerHTML =formatChatbotAnswer(botReply);
+            botMessage.innerHTML = formatChatbotAnswer(botReply);
 
             chatMessages.appendChild(botMessage);
-
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
         } catch (error) {
-            // console.error("URL ", BASE_URL);
             console.error("Lỗi API:", error);
+            typingIndicator.remove();
         }
         toggleSendButtonState();
     };
