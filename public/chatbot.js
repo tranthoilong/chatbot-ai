@@ -51,6 +51,12 @@
     }
 
     function formatChatbotAnswer(text) {
+        // Check for image markdown pattern
+        const imgPattern = /\*\*<img src='([^']+)' alt='([^']+)' style='([^']+)'\/>\*\*/g;
+        if (imgPattern.test(text)) {
+            return text.replace(imgPattern, "<img src='$1' alt='$2' style='$3'/>");
+        }
+
         return text
             .replace(/\n\n/g, '</p><p>') 
             .replace(/\n/g, '<br>')      
@@ -58,7 +64,7 @@
             .replace(/\* (.*?)\n/g, '<li>$1</li>') 
             .replace(/<li>/g, '<ul><li>')        
             .replace(/<\/li>(?!<li>)/g, '</li></ul>')
-            .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');; 
+            .replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank">$1</a>');
     }
 
     if (document.getElementById("chatbot-widget")) return;
@@ -256,7 +262,7 @@
         .typing-dot:nth-child(3) { animation: typing 1s infinite 0.4s; }
 
         .suggestion-chips {
-            display: flex;
+            display: none;
             flex-wrap: wrap;
             gap: 8px;
             padding: 10px;
@@ -272,6 +278,18 @@
             transition: all 0.2s ease;
         }
         .suggestion-chip:hover {
+            background: #bbdefb;
+        }
+        .show-suggestions-btn {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            padding: 8px 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            margin: 10px;
+            text-align: center;
+        }
+        .show-suggestions-btn:hover {
             background: #bbdefb;
         }
     `;
@@ -308,6 +326,7 @@
             </button>
         </div>
         <div class="chat-messages" id="chatMessages"></div>
+        <div class="show-suggestions-btn" onclick="toggleSuggestions()">Hiển thị câu hỏi gợi ý</div>
         <div class="suggestion-chips" id="suggestionChips"></div>
         <div class="chat-input">
             <input type="text" id="userInput" placeholder="Nhập tin nhắn...">
@@ -320,7 +339,14 @@
         try {
             const response = await fetch(`${BASE_URL}/chat-scenarios`);
             const data = await response.json();
-            return data.scenarios;
+            const scenarios = data.scenarios.map(scenario => ({
+                name: scenario.question,
+                messages: [{
+                    question: scenario.question,
+                    answer: scenario.answer
+                }]
+            }));
+            return scenarios;
         } catch (error) {
             console.error("Error loading suggestions:", error);
             return [];
@@ -350,6 +376,20 @@
             };
             suggestionChips.appendChild(chip);
         });
+    }
+
+    window.toggleSuggestions = function() {
+        const suggestionChips = document.getElementById("suggestionChips");
+        const showSuggestionsBtn = document.querySelector(".show-suggestions-btn");
+        
+        if (suggestionChips.style.display === "flex") {
+            suggestionChips.style.display = "none";
+            showSuggestionsBtn.textContent = "Hiển thị câu hỏi gợi ý";
+        } else {
+            suggestionChips.style.display = "flex";
+            showSuggestionsBtn.textContent = "Ẩn câu hỏi gợi ý";
+            displaySuggestions();
+        }
     }
 
     function toggleChatbot() {
