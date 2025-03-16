@@ -22,6 +22,7 @@
     let floatingPositionBottom = chatbot_container_element.getAttribute('data-chat-floating-bottom')??'20px';
     let floatingPositionRight = chatbot_container_element.getAttribute('data-chat-floating-right')??'20px';
     let botChatAvatar = chatbot_container_element.getAttribute('data-chat-avatar');
+    let chatBackgroundColor = chatbot_container_element.getAttribute('data-chat-background-color') ?? '#0078ff';
 
     function calculateFloatingPositionBottom(floatingPositionBottom) {
         let match = floatingPositionBottom.match(/([0-9.-]+)([a-zA-Z%]*)/);
@@ -98,7 +99,7 @@
             right: ${floatingPositionRight};
             width: 60px;
             height: 60px;
-            background: #0078ff;
+            background: ${chatBackgroundColor};
             color: white;
             border-radius: 50%;
             text-align: center;
@@ -135,7 +136,7 @@
             opacity: 1;
         }
         .chat-header {
-            background: #0078ff;
+            background: ${chatBackgroundColor};
             color: white;
             padding: 15px;
             font-size: 18px;
@@ -167,7 +168,7 @@
             font-size: 14px;
         }
         .user-message {
-            background: #0078ff;
+            background: ${chatBackgroundColor};
             color: white;
             align-self: flex-end;
             border-top-right-radius: 0;
@@ -194,7 +195,7 @@
         }
         .chat-input button {
             padding: 12px 15px;
-            background: #0078ff;
+            background: ${chatBackgroundColor};
             color: white;
             border: none;
             cursor: pointer;
@@ -204,7 +205,8 @@
             transition: background 0.3s ease;
         }
         .chat-input button:hover {
-            background: #005bbf;
+            background: ${chatBackgroundColor};
+            opacity: 0.8;
         }
         #minimize-btn {
             border: none;
@@ -215,7 +217,7 @@
 
         .chat-input button {
             padding: 12px 15px;
-            background:rgb(38, 0, 255); 
+            background: ${chatBackgroundColor};
             color: white;
             border: none;
             cursor: pointer;
@@ -226,7 +228,8 @@
         }
 
         .chat-input button:hover {
-            background: rgb(31, 8, 160); 
+            background: ${chatBackgroundColor};
+            opacity: 0.8;
         }
 
         .chat-input button.disabled {
