@@ -53,7 +53,7 @@
 
     function formatChatbotAnswer(text) {
         // Check for image markdown pattern
-        const imgPattern = /\*\*<img src='([^']+)' alt='([^']+)' style='([^']+)'\/>\*\*/g;
+        const imgPattern = /<img src='([^']+)' alt='([^']+)' style='([^']+)'\/>/g;
         if (imgPattern.test(text)) {
             return text.replace(imgPattern, "<img src='$1' alt='$2' style='$3'/>");
         }

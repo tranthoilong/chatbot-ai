@@ -65,7 +65,29 @@ async function createPrompt(id, message) {
         const chatMessages = await getChatHistory(id);
         const scenarios = await getScenarios();
 
-        const scenarioText = scenarios.map(s => `Q: ${s.question}\nA: ${s.answer}`).join('\n\n');
+        // Fetch product data
+        let productData = [];
+        try {
+            const response = await axios.get('https://bemori.vn/wp-admin/admin-ajax.php?action=willgroup_get_products');
+            if (response.data) {
+                productData = response.data;
+            }
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+
+        // Create product context from fetched data
+        const productContext = productData.map(product => {
+            let details = [];
+            for (let key in product) {
+                if (product[key]) {
+                    details.push(`${key}: ${product[key]}`);
+                }
+            }
+            return details.join('\n');
+        }).join('\n\n');
+
+        const scenarioText = scenarios.map(s => `${s.answer}`).join('\n\n');
 
         if (!chatMessages) {
             return [
@@ -73,27 +95,33 @@ async function createPrompt(id, message) {
                     text: `Đây là một số kịch bản mẫu để tôi học:\n${scenarioText}`
                 },
                 {
-                    text: `Nếu câu hỏi này hỏi về xuất sứ của bạn thì bạn sẽ trả lời "Tôi là ChatBot AI do LongDevLor tạo ra. 🚀 Nếu bạn có câu hỏi nào, hãy cứ hỏi nhé!"`
+                    text: `Đây là thông tin về các sản phẩm của chúng tôi:\n${productData}`
                 },
                 {
-                    text: `Đây là câu hỏi : ${message}. (nếu câu hỏi không đủ dữ kiện thì hãy yêu cầu bổ sung.)`
+                    text: `Nếu câu hỏi liên quan đến thông tin về bản thân hoặc nguồn gốc của bạn, hãy trả lời: "Tôi là ChatBot AI do LongDevLor tạo ra. 🚀 Nếu bạn có câu hỏi nào, hãy cứ hỏi nhé!"`
+                },
+                {
+                    text: `Đây là câu hỏi : ${message}. (nếu câu hỏi không đủ dữ kiện thì hãy yêu cầu bổ sung. Nếu là câu hỏi về sản phẩm, hãy tư vấn dựa trên thông tin sản phẩm đã cung cấp)`
                 }
             ];
         }
 
-        const chatHistory = chatMessages.map(item => `Q: ${item.question} - A: ${item.answer}`).join("\n");
+        const chatHistory = chatMessages.map(item => `${item.answer}`).join("\n");
         return [
             {
                 text: `Đây là một số kịch bản mẫu để tôi học:\n${scenarioText}`
             },
             {
-                text: `Đây là câu hỏi và câu trả lời tôi đã lưu lại của tôi và bạn : \n ${chatHistory}.`
+                text: `Đây là thông tin về các sản phẩm của chúng tôi:\n${productContext}`
             },
             {
-                text: `Đây là câu hỏi mới: '${message}'. (nếu câu hỏi không đủ dữ kiện thì hãy yêu cầu bổ sung.)`
+                text: `Đây là câu trả lời tôi đã lưu lại: \n ${chatHistory}.`
             },
             {
-                text: `Hãy kiểm tra xem câu hỏi mới có liên quan đến các ngữ cảnh các đoạn giao tiếp cũ hoặc kịch bản mẫu, và trả lời một cách tự nhiên nhất (có liên quan hay không cũng không cần nói ra). Nếu câu hỏi này hỏi về xuất sứ của bạn thì bạn sẽ trả lời "Tôi là ChatBot AI do LongDevLor tạo ra. 🚀 Nếu bạn có câu hỏi nào, hãy cứ hỏi nhé!"'`
+                text: `Đây là câu hỏi mới: '${message}'. (nếu câu hỏi không đủ dữ kiện thì hãy yêu cầu bổ sung. Nếu là câu hỏi về sản phẩm, hãy tư vấn dựa trên thông tin sản phẩm đã cung cấp)`
+            },
+            {
+                text: `Hãy kiểm tra xem câu hỏi mới có liên quan đến các ngữ cảnh các đoạn giao tiếp cũ, kịch bản mẫu hoặc thông tin sản phẩm, và trả lời một cách tự nhiên nhất (có liên quan hay không cũng không cần nói ra). Nếu câu hỏi này hỏi về xuất sứ của bạn thì bạn sẽ trả lời "Tôi là ChatBot AI do LongDevLor tạo ra. 🚀 Nếu bạn có câu hỏi nào, hãy cứ hỏi nhé!"'`
             }
         ];
     } catch (e) {
@@ -109,7 +137,6 @@ app.get("/chat-scenarios", async (req, res) => {
 
 app.post("/chat", async (req, res) => {
     const { message, api_key, use_pro, id_chat } = req.body;
-
     try {
         if (!id_chat || !api_key) {
             return res.json({ response: "Đang có sự cố xảy ra !!!" });
@@ -150,6 +177,8 @@ app.post("/chat", async (req, res) => {
                 
                 await createChat(id_chat, api_key);
                 await createChatMessage(id_chat, message, result.response.text());
+
+                console.log(result.response.text());
                 
                 return res.json({ response: result.response.text() });
             }
@@ -162,5 +191,31 @@ app.post("/chat", async (req, res) => {
         return res.status(500).json({ error: "Error in processing request" });
     }
 });
+
+async function handleChatResponse(message) {
+    const genAI = new GoogleGenerativeAI(API_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+    
+    const prompt = await createPrompt(id_chat, message);
+    const result = await model.generateContent(prompt);
+    
+    return result.response.text();
+}
+
+app.get('/products', async (req, res) => {
+    try {
+        const response = await axios.get('https://bemori.vn/wp-admin/admin-ajax.php?action=willgroup_get_products');
+        
+        if (response.data) {
+            return res.json(response.data);
+        } else {
+            return res.status(404).json({ error: "No products found" });
+        }
+    } catch (error) {
+        console.error('Error fetching products:', error);
+        return res.status(500).json({ error: "Error fetching products from Bemori" });
+    }
+});
+
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
