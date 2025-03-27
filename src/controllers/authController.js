@@ -31,13 +31,14 @@ async function register(req, res) {
         });
 
         res.status(201).json({
+            status: 200,
             message: "Đăng ký thành công!",
             data: { id: newUser.id, username: newUser.username, email: newUser.email,newUserPlan }
         });
 
     } catch (e) {
         console.error(e);
-        res.status(500).json({ message: "Lỗi Server" });
+        res.status(500).json({ status: 500, message: "Lỗi Server" });
     }
 }
 
@@ -57,11 +58,11 @@ async function login(req, res) {
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
         const refreshToken = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "30d" });
 
-        res.json({ message: "Đăng nhập thành công!", token, refreshToken });
+        res.json({ status: 200, message: "Đăng nhập thành công!", token, refreshToken });
 
     } catch (e) {
         console.error("Lỗi đăng nhập:", e);
-        res.status(500).json({ message: "Lỗi Server" });
+        res.status(500).json({ status: 500, message: "Lỗi Server" });
     }
 }
 
@@ -71,11 +72,11 @@ async function getProfile(req, res) {
 
         if (!user) return res.status(404).json({ message: "Người dùng không tồn tại!" });
 
-        res.json({ message: "Lấy thông tin người dùng thành công!", data: user });
+        res.json({ status: 200, message: "Lấy thông tin người dùng thành công!", data: user });
 
     } catch (error) {
         console.error("Lỗi lấy thông tin người dùng:", error);
-        res.status(500).json({ message: "Lỗi Server" });
+        res.status(500).json({ status: 500, message: "Lỗi Server" });
     }
 }
 
@@ -108,6 +109,7 @@ async function registerPlan(req, res) {
         });
 
         res.status(201).json({
+            status: 200,
             message: "Đăng ký gói dịch vụ thành công!",
             data: {
                 userId: user.id,
@@ -119,7 +121,7 @@ async function registerPlan(req, res) {
 
     } catch (error) {
         console.error("Lỗi đăng ký gói dịch vụ:", error);
-        res.status(500).json({ error: "Lỗi Server" });
+        res.status(500).json({ status: 500, message: "Lỗi Server" });
     }
 }
 
@@ -137,6 +139,7 @@ async function createApiKey(req, res) {
             last_used: null      
         });
         res.status(201).json({
+            status: 200,
             message: "API Key được tạo thành công!",
             data: {
                 api_key:newApiKey.api_key
@@ -144,7 +147,7 @@ async function createApiKey(req, res) {
         });
     } catch (error) {
         console.error("Lỗi tạo API Key:", error);
-        res.status(500).json({ error: "Lỗi Server" });
+        res.status(500).json({ status: 500, message: "Lỗi Server" });
     }
 }
 
@@ -190,6 +193,7 @@ async function getUserFromApiKey(req, res) {
             });
 
         res.json({
+            status: 200,
             message: "Lấy thông tin người dùng thành công!",
             data: {
                 id: user.id,
@@ -201,10 +205,52 @@ async function getUserFromApiKey(req, res) {
         });
     } catch (error) {
         console.error("Lỗi lấy thông tin người dùng từ API Key:", error);
-        res.status(500).json({ error: "Lỗi Server" });
+        res.status(500).json({ status: 500, message: "Lỗi Server" });
+    }
+}
+
+async function getUsers(req, res) {
+    try {
+        const users = await User.findAll({
+            attributes: ['id', 'username', 'email', 'status'],
+            include: [
+                {
+                    model: UserPlan,
+                    as: 'userPlans',
+                    include: [
+                        {
+                            model: Plan,
+                            as: 'plan',
+                            attributes: ['id', 'name', 'price', 'max_api_keys', 'max_usage', 'duration', 'description', 'status']
+                        }
+                    ]
+                }
+            ]
+        });
+
+        res.json({
+            status: 200,
+            message: "Lấy danh sách người dùng thành công!",
+            data: users.map(user => ({
+                id: user.id,
+                username: user.username,
+                email: user.email,
+                status: user.status,
+                plans: user.userPlans.map(userPlan => ({
+                    plan: userPlan.plan,
+                    start_date: userPlan.start_date,
+                    end_date: userPlan.end_date,
+                    status: userPlan.status
+                }))
+            }))
+        });
+    } catch (error) {
+        console.error("Lỗi lấy danh sách người dùng:", error);
+        res.status(500).json({ status: 500, message: "Lỗi Server" });
     }
 }
 
 
 
-module.exports = { register, login, getProfile, createApiKey, getUserFromApiKey, registerPlan};
+
+module.exports = { register, login, getProfile, createApiKey, getUserFromApiKey, registerPlan, getUsers};
