@@ -21,7 +21,7 @@ async function register(req, res) {
         const newUser = await User.create({ username, email, password: hashedPassword });
 
         const planId = '76b5d822-c42d-4692-a296-33182642a8c9'
-        const roleIdDefault = 'ffc88a0e-eed2-4ec9-ad53-10f3d3291348'
+        const roleIdDefault = '4e90af5d-64d3-4c90-9f11-afb5659eecd3'
         const plan = await Plan.findByPk(planId);
         await UserPlan.create({
             user_id: newUser.id,
