@@ -1,10 +1,11 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { v4: uuidv4 } = require("uuid");
-const {User,Plan,UserPlan,ApiKey} = require("../models/");
+const {User,Plan,UserPlan,ApiKey,UserRole,Role,RolePermission,Permission} = require("../models/");
 // const UserAPIKey = require("../models/UserAPIKey");
 const { getUserByApiKey } = require("../utils/authUtils");
 const { TYPE_CHAT, TYPE_STATUS } = require("../constants");
+
 
 const JWT_SECRET = process.env.JWT_SECRET || "123@Long";
 
@@ -19,10 +20,10 @@ async function register(req, res) {
         const hashedPassword = await bcrypt.hash(password, 10);
         const newUser = await User.create({ username, email, password: hashedPassword });
 
-
         const planId = '76b5d822-c42d-4692-a296-33182642a8c9'
+        const roleIdDefault = 'ffc88a0e-eed2-4ec9-ad53-10f3d3291348'
         const plan = await Plan.findByPk(planId);
-        const newUserPlan = await UserPlan.create({
+        await UserPlan.create({
             user_id: newUser.id,
             plan_id: planId,
             start_date: new Date(),
@@ -30,10 +31,14 @@ async function register(req, res) {
             status: 1 
         });
 
+        await UserRole.create({
+            user_id: newUser.id,
+            role_id: roleIdDefault
+        });
+
         res.status(201).json({
             status: 200,
-            message: "Đăng ký thành công!",
-            data: { id: newUser.id, username: newUser.username, email: newUser.email,newUserPlan }
+            message: "Đăng ký thành công!"
         });
 
     } catch (e) {
@@ -55,8 +60,22 @@ async function login(req, res) {
             return res.status(403).json({ error: "Tài khoản đã bị khóa!" });
         }
 
-        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
-        const refreshToken = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "30d" });
+        const roleUser = await UserRole.findOne({ where: { user_id: user.id } });
+
+        if (!roleUser) {
+            return res.status(403).json({ error: "Tài khoản không có quyền truy cập!" });
+        }
+        
+        console.log(roleUser);
+
+        const role = await Role.findByPk(roleUser.role_id);
+
+        console.log(role);
+
+        const payload = { id: user.id, role: role.name ,role_id: role.id};
+
+        const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "1h" });
+        const refreshToken = jwt.sign(payload, JWT_SECRET, { expiresIn: "30d" });
 
         res.json({ status: 200, message: "Đăng nhập thành công!", token, refreshToken });
 
@@ -69,8 +88,37 @@ async function login(req, res) {
 async function getProfile(req, res) {
     try {
         const user = await User.findByPk(req.user.id, { attributes: ["id", "username", "email"] });
-
         if (!user) return res.status(404).json({ message: "Người dùng không tồn tại!" });
+
+        const userRole = await UserRole.findOne({
+            where: { user_id: user.id },
+            include: [{
+                model: Role,
+                attributes: ['id', 'name', 'description']
+            }]
+        });
+
+        const apiKeys = await ApiKey.findAll({
+            where: { user_id: user.id, status: 1 },
+            attributes: ['id', 'api_key', 'last_used', 'usage_count']
+        });
+
+        const rolePermissions = await RolePermission.findOne({
+            where: { role_id: req.user.role_id },
+        });
+
+        const permissions = await Permission.findOne({
+            where: { id: rolePermissions.permission_id }
+        });
+
+
+        user.dataValues.role = {
+            name: userRole.Role.name,
+            permissions: permissions.permission,
+            is_full_access: permissions.is_full_access
+        };
+
+        user.dataValues.apiKeys = apiKeys;
 
         res.json({ status: 200, message: "Lấy thông tin người dùng thành công!", data: user });
 

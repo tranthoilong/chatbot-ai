@@ -10,5 +10,5 @@ router.get("/me", authenticateToken, getProfile);
 router.post("/create-api-key", authenticateToken, createApiKey);
 router.post("/register-plan", authenticateToken, registerPlan);
 router.get("/user-by-api-key", getUserFromApiKey);
-router.get("/users", getUsers);
+router.get("/get-list-users", getUsers);
 module.exports = router;

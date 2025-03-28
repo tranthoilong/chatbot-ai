@@ -7,7 +7,7 @@ const authRoutes = require("./src/routes/authRoutes");
 const { getUserByApiKey } = require("./src/utils/authUtils");
 const { createChat, createChatMessage, getChatHistory } = require("./src/utils/chatUtils");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-
+const roleRoutes = require("./src/routes/roleRoutes");
 const app = express();
 const PORT = process.env.PORT || 5001;
 const API_KEY = process.env.GEMINI_API_KEY;
@@ -17,6 +17,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/auth", authRoutes);
+app.use("/api/role", roleRoutes);
 
 // Routes
 app.get("/", (req, res) => {
